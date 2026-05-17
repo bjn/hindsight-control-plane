@@ -16,7 +16,7 @@ permissions:
 env:
   IMAGE_NAME: ghcr.io/bjn/hindsight-control-plane
   COOLIFY_API_URL: https://app.coolify.io/api/v1
-  COOLIFY_APPLICATION_UUID: REPLACE_COOLIFY_APPLICATION_UUID
+  COOLIFY_APPLICATION_UUID: kcpsn6pb3hzjd53e218m2uth
 
 jobs:
   build-and-push:
@@ -47,7 +47,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Trigger Coolify deploy
-        if: github.ref == 'refs/heads/main' && env.COOLIFY_APPLICATION_UUID != 'REPLACE_COOLIFY_APPLICATION_UUID'
+        if: github.ref == 'refs/heads/main'
         env:
           COOLIFY_API_KEY: ${{ secrets.COOLIFY_API_KEY }}
         run: |

@@ -20,11 +20,7 @@ services:
       coolify:
         aliases:
           - hindsight-explorer
-      hermes-webui: null
 
 networks:
   coolify:
     external: true
-  hermes-webui:
-    external: true
-    name: qqm82xixjk7y8k4qg57tbtb3

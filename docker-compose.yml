@@ -6,33 +6,25 @@ services:
     environment:
       PORT: 9999
       HOSTNAME: 0.0.0.0
-      HINDSIGHT_CP_DATAPLANE_API_URL: http://hindsight-memory:8888
+      HINDSIGHT_API_URL: http://hindsight-memory:8888
     labels:
-      traefik.enable: "true"
-      traefik.http.middlewares.gzip.compress: "true"
-      traefik.http.middlewares.redirect-to-https.redirectscheme.scheme: https
-      traefik.http.middlewares.hindsight-control-plane-auth.forwardauth.address: http://authentik-server-s440g4cwsc444gk4k4goc4s4:9000/outpost.goauthentik.io/auth/traefik
-      traefik.http.middlewares.hindsight-control-plane-auth.forwardauth.trustForwardHeader: "true"
-      traefik.http.middlewares.hindsight-control-plane-auth.forwardauth.authResponseHeaders: X-authentik-username,X-authentik-groups,X-authentik-email,X-authentik-name,X-authentik-uid,X-authentik-jwt,X-authentik-meta-jwks,X-authentik-meta-outpost,X-authentik-meta-provider,X-authentik-meta-app,X-authentik-meta-version
-      traefik.http.routers.hindsight-control-plane-http.rule: Host(`hindsight.crankingoutcode.com`)
-      traefik.http.routers.hindsight-control-plane-http.entrypoints: http
-      traefik.http.routers.hindsight-control-plane-http.middlewares: redirect-to-https
-      traefik.http.routers.hindsight-control-plane-https.rule: Host(`hindsight.crankingoutcode.com`)
-      traefik.http.routers.hindsight-control-plane-https.entrypoints: https
-      traefik.http.routers.hindsight-control-plane-https.middlewares: gzip,hindsight-control-plane-auth
-      traefik.http.routers.hindsight-control-plane-https.tls: "true"
-      traefik.http.routers.hindsight-control-plane-https.tls.certresolver: letsencrypt
-      traefik.http.services.hindsight-control-plane.loadbalancer.server.port: 9999
+      traefik.enable: "false"
     healthcheck:
-      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:9999/"]
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:9999/health"]
       interval: 30s
       timeout: 10s
       retries: 5
-      start_period: 60s
+      start_period: 30s
     networks:
       default: null
-      coolify: null
+      coolify:
+        aliases:
+          - hindsight-explorer
+      hermes-webui: null
 
 networks:
   coolify:
     external: true
+  hermes-webui:
+    external: true
+    name: qqm82xixjk7y8k4qg57tbtb3

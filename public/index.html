@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hindsight Explorer</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="app-header">
+    <div>
+      <p class="eyebrow">Hermes private tools</p>
+      <h1>Hindsight Explorer</h1>
+      <p class="subtitle">Read-only browser for memory banks, recent memories, documents, operations, and recall.</p>
+    </div>
+    <div id="health" class="status-pill pending">Checking…</div>
+  </header>
+
+  <main>
+    <section class="toolbar card">
+      <div>
+        <label for="bankSelect">Active bank</label>
+        <select id="bankSelect" disabled></select>
+      </div>
+      <button id="refreshButton" type="button">Refresh</button>
+    </section>
+
+    <section id="bankCards" class="bank-grid" aria-live="polite"></section>
+
+    <nav class="tabs" aria-label="Explorer views">
+      <button class="tab active" data-tab="overview" type="button">Overview</button>
+      <button class="tab" data-tab="memories" type="button">Memories</button>
+      <button class="tab" data-tab="documents" type="button">Documents</button>
+      <button class="tab" data-tab="recall" type="button">Recall</button>
+      <button class="tab" data-tab="operations" type="button">Operations</button>
+    </nav>
+
+    <section id="content" class="content card" aria-live="polite"></section>
+  </main>
+
+  <template id="loadingTemplate">
+    <div class="empty-state">Loading…</div>
+  </template>
+
+  <script src="/app.js"></script>
+</body>
+</html>

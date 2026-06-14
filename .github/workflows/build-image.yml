@@ -11,6 +11,7 @@ on:
       - server.test.js
       - public/**
       - .github/workflows/build-image.yml
+      - .github/scripts/**
   workflow_dispatch:
 
 permissions:
@@ -63,11 +64,7 @@ jobs:
           COOLIFY_API_KEY: ${{ secrets.COOLIFY_API_KEY }}
         run: |
           test -n "$COOLIFY_API_KEY"
-          curl --fail --show-error --silent \
-            --get "${COOLIFY_API_URL}/deploy" \
-            --header "Authorization: Bearer ${COOLIFY_API_KEY}" \
-            --data-urlencode "uuid=${COOLIFY_APPLICATION_UUID}" \
-            --data-urlencode "force=false"
+          ./.github/scripts/coolify-deploy-and-wait.sh "$COOLIFY_APPLICATION_UUID" false
 
   notify-result:
     name: Notify ntfy on workflow result
@@ -99,22 +96,22 @@ jobs:
 
           if printf '%s' "$NEEDS_JSON" | grep -q '"result"[[:space:]]*:[[:space:]]*"failure"'; then
             STATE="failed"
-            TITLE="GitHub Actions failed: ${REPOSITORY}"
+            TITLE="Coolify deploy failed: ${REPOSITORY}"
             PRIORITY="high"
-            TAGS="warning,github"
+            TAGS="warning,rocket"
           elif printf '%s' "$NEEDS_JSON" | grep -q '"result"[[:space:]]*:[[:space:]]*"cancelled"'; then
             STATE="cancelled"
-            TITLE="GitHub Actions cancelled: ${REPOSITORY}"
+            TITLE="Coolify deploy cancelled: ${REPOSITORY}"
             PRIORITY="high"
-            TAGS="warning,github"
+            TAGS="warning,rocket"
           else
             STATE="succeeded"
-            TITLE="GitHub Actions succeeded: ${REPOSITORY}"
+            TITLE="Coolify deploy succeeded: ${REPOSITORY}"
             PRIORITY="low"
-            TAGS="white_check_mark,github"
+            TAGS="white_check_mark,rocket"
           fi
 
-          MESSAGE="$(printf '%s\n%s' "${WORKFLOW_NAME} ${STATE} on ${REF_NAME} (${SHORT_SHA})" "${RUN_URL}")"
+          MESSAGE="$(printf '%s\n%s' "Coolify deploy ${STATE}: ${WORKFLOW_NAME} on ${REF_NAME} (${SHORT_SHA})" "${RUN_URL}")"
           curl --fail --show-error --silent \
             -u "$NTFY_USER:$NTFY_PASSWORD" \
             -H "Title: ${TITLE}" \
